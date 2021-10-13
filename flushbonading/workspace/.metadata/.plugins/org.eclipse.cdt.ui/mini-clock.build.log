@@ -1,0 +1,22 @@
+11:48:48 **** Incremental Build of configuration Debug for project mini-clock ****
+make -j4 all 
+arm-none-eabi-g++ "../applications/oled_display.cpp"
+In file included from ../applications/oled_display.cpp:22:0:
+D:\RT-ThreadStudio\workspace\mini-clock\packages\sht3x-v1.0.0/sht3x.h:80:17: warning: 'rt_err_t write_cmd(sht3x_device_t, rt_uint16_t)' declared 'static' but never defined [-Wunused-function]
+ static rt_err_t write_cmd(sht3x_device_t dev, rt_uint16_t cmd);
+                 ^
+D:\RT-ThreadStudio\workspace\mini-clock\packages\sht3x-v1.0.0/sht3x.h:91:17: warning: 'rt_err_t read_bytes(sht3x_device_t, rt_uint8_t*, rt_uint8_t)' declared 'static' but never defined [-Wunused-function]
+ static rt_err_t read_bytes(sht3x_device_t dev, rt_uint8_t * buf, rt_uint8_t len);
+                 ^
+linking...
+arm-none-eabi-objcopy -O binary "rtthread.elf"  "rtthread.bin"
+arm-none-eabi-size --format=berkeley "rtthread.elf"
+   text	   data	    bss	    dec	    hex	filename
+ 173892	   1256	   6188	 181336	  2c458	rtthread.elf
+
+              Used Size(B)           Used Size(KB)
+Flash:         175148 B              171.04 KB
+RAM:             7444 B                7.27 KB
+
+11:48:51 Build Finished. 0 errors, 2 warnings. (took 3s.523ms)
+

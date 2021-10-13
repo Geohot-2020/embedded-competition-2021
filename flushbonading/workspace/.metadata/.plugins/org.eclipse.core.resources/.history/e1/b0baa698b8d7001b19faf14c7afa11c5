@@ -1,0 +1,63 @@
+/*
+ * Copyright (c) 2006-2021, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-06-27     RT-Thread    first version
+ */
+
+#include <rtthread.h>
+#include <board.h>
+#include <rtdevice.h>
+#include <drv_soft_i2c.h>
+#include <arpa/inet.h>         /* 包含 ip_addr_t 等地址相关的头文件 */
+#include <netdev.h>            /* 包含全部的 netdev 相关操作接口函数 */
+
+#define DBG_TAG "main"
+#define DBG_LVL DBG_LOG
+#include <rtdbg.h>
+
+#define LED0_PIN GET_PIN(B, 5)
+
+extern int sht30_collect(void);
+
+//struct netdev *netdev_get_by_name(const char *name);
+//#define netdev_is_internet_up(netdev)
+
+int main(void)
+{
+    //获取网卡对象
+    struct netdev* net = netdev_get_by_name("esp0");
+
+    //阻塞判断当前网络是否正常连接
+    while(netdev_is_internet_up(net) != 1)
+    {
+       rt_thread_mdelay(200);
+    }
+    //提示当前网络已就绪
+    rt_kprintf("network is ok!\n");
+
+    int count = 1;
+    /*set LED0 pin mode to output*/
+    rt_pin_mode(LED0_PIN, PIN_MODE_OUTPUT);
+//    sht30_collect();
+    while (count++)
+    {
+        rt_pin_write(LED0_PIN, count % 2);
+//        LOG_D("Hello RT-Thread!");
+        rt_thread_mdelay(1000);
+    }
+
+    return RT_EOK;
+}
+
+int register_i2c(void)
+{
+    rt_hw_i2c_init("i2c1", GET_PIN(B,6), GET_PIN(B,7));
+
+    return RT_EOK;
+}
+//注册到系统中，自动初始化设备
+INIT_BOARD_EXPORT(register_i2c);

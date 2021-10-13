@@ -1,0 +1,92 @@
+/*
+ * Copyright (c) 2006-2021, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-06-28     Daniel       the first version
+ */
+#ifndef APPLICATIONS_SENSOR_H_
+#define APPLICATIONS_SENSOR_H_
+
+
+
+#endif /* APPLICATIONS_SENSOR_H_ */
+static rt_size_t _dht11_polling_get_data(rt_sensor_t sensor, struct rt_sensor_data *data)
+{
+    rt_int32_t temperature_humidity;
+    if (sensor->info.type == RT_SENSOR_CLASS_TEMP)
+    {
+        temperature_humidity = dht11_get_temperature((rt_base_t)sensor->config.intf.user_data);
+        data->data.temp = temperature_humidity;
+        data->timestamp = rt_sensor_get_ts();
+    }
+    return 1;
+}
+
+static rt_size_t dht11_fetch_data(struct rt_sensor_device *sensor, void *buf, rt_size_t len)
+{
+    RT_ASSERT(buf);
+
+    if (sensor->config.mode == RT_SENSOR_MODE_POLLING)
+    {
+        return _dht11_polling_get_data(sensor, buf);
+    }
+    else
+        return 0;
+}
+
+static rt_err_t dht11_control(struct rt_sensor_device *sensor, int cmd, void *args)
+{
+    rt_err_t result = RT_EOK;
+
+    return result;
+}
+
+static struct rt_sensor_ops sensor_ops =
+{
+    dht11_fetch_data,
+    dht11_control
+};
+
+
+int rt_hw_dht11_init(const char *name, struct rt_sensor_config *cfg)
+{
+    rt_int8_t result;
+    rt_sensor_t sensor_temp = RT_NULL;
+
+    if (!DHT11_Init((rt_base_t)cfg->intf.user_data))
+    {
+        /* temperature sensor register */
+        sensor_temp = rt_calloc(1, sizeof(struct rt_sensor_device));
+        if (sensor_temp == RT_NULL)
+            return -1;
+
+        sensor_temp->info.type       = RT_SENSOR_CLASS_TEMP;
+        sensor_temp->info.vendor     = RT_SENSOR_VENDOR_DALLAS;
+        sensor_temp->info.model      = "temp_dht11";
+        sensor_temp->info.unit       = RT_SENSOR_UNIT_DCELSIUS;
+        sensor_temp->info.intf_type  = RT_SENSOR_INTF_ONEWIRE;
+        sensor_temp->info.range_max  = 50;
+        sensor_temp->info.range_min  = 0;
+        sensor_temp->info.period_min = 5;
+
+        rt_memcpy(&sensor_temp->config, cfg, sizeof(struct rt_sensor_config));
+        sensor_temp->ops = &sensor_ops;
+
+        result = rt_hw_sensor_register(sensor_temp, name, RT_DEVICE_FLAG_RDONLY, RT_NULL);
+        if (result != RT_EOK)
+        {
+            LOG_E("device register err code: %d", result);
+            goto __exit;
+        }
+
+    }
+    return RT_EOK;
+
+__exit:
+    if (sensor_temp)
+        rt_free(sensor_temp);
+    return -RT_ERROR;
+}

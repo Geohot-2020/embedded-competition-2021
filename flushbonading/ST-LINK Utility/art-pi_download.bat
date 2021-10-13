@@ -1,0 +1,1 @@
+ST-LINK_CLI.exe -c SWD UR -Rst -ME -P Product_Factory_Test_New.bin 0x08000000 -V -Rst -Run

@@ -1,0 +1,15 @@
+/*
+ * Copyright (c) 2006-2021, RT-Thread Development Team
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Change Logs:
+ * Date           Author       Notes
+ * 2021-06-28     Daniel       the first version
+ */
+#ifndef DRIVERS_DRV_DHT11_H_
+#define DRIVERS_DRV_DHT11_H_
+
+
+
+#endif /* DRIVERS_DRV_DHT11_H_ */

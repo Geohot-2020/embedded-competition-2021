@@ -1,0 +1,15 @@
+22:23:23 **** Incremental Build of configuration Debug for project quick-start ****
+make -j4 all 
+arm-none-eabi-gcc "../applications/main.c"
+linking...
+arm-none-eabi-objcopy -O binary "rtthread.elf"  "rtthread.bin"
+arm-none-eabi-size --format=berkeley "rtthread.elf"
+   text	   data	    bss	    dec	    hex	filename
+  50172	   1432	   3320	  54924	   d68c	rtthread.elf
+
+              Used Size(B)           Used Size(KB)
+Flash:          51604 B               50.39 KB
+RAM:             4752 B                4.64 KB
+
+22:23:26 Build Finished. 0 errors, 0 warnings. (took 2s.254ms)
+
