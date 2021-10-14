@@ -1,0 +1,9 @@
+# 保存到缓存区，或 git add 被拖入的项目名
+git add .
+# 描述这次提交的内容 (推送到本地库中)
+git commit -m “要描述的内容”
+# 推送到远端仓库码云上，项目大的话，时间会久些
+git push origin master
+注意：如果最后一步报错，可以使用 git push -f origin master，来强制覆盖。
+   git push origin master //（正常提交）
+   git push origin master -f //（强制提交，强制提交可能会把之前的commit注释信息，不会改变修改的代码
